@@ -20,8 +20,16 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
+
+/**
+ * BASED ON MANY QUESTIONS
+ * Actually ready mentioned on the tutorials
+ * 
+ * Many people confused about the warning for file-upload
+ * So, we just disabling the debug for simplicity.
+ */
 app.use(fileUpload({
-  debug: true
+  debug: false
 }));
 
 app.get('/', (req, res) => {
@@ -70,42 +78,44 @@ client.on('message', msg => {
     });
   }
 
+  // NOTE!
+  // UNCOMMENT THE SCRIPT BELOW IF YOU WANT TO SAVE THE MESSAGE MEDIA FILES
   // Downloading media
-  if (msg.hasMedia) {
-    msg.downloadMedia().then(media => {
-      // To better understanding
-      // Please look at the console what data we get
-      console.log(media);
+  // if (msg.hasMedia) {
+  //   msg.downloadMedia().then(media => {
+  //     // To better understanding
+  //     // Please look at the console what data we get
+  //     console.log(media);
 
-      if (media) {
-        // The folder to store: change as you want!
-        // Create if not exists
-        const mediaPath = './downloaded-media/';
+  //     if (media) {
+  //       // The folder to store: change as you want!
+  //       // Create if not exists
+  //       const mediaPath = './downloaded-media/';
 
-        if (!fs.existsSync(mediaPath)) {
-          fs.mkdirSync(mediaPath);
-        }
+  //       if (!fs.existsSync(mediaPath)) {
+  //         fs.mkdirSync(mediaPath);
+  //       }
 
-        // Get the file extension by mime-type
-        const extension = mime.extension(media.mimetype);
+  //       // Get the file extension by mime-type
+  //       const extension = mime.extension(media.mimetype);
         
-        // Filename: change as you want! 
-        // I will use the time for this example
-        // Why not use media.filename? Because the value is not certain exists
-        const filename = new Date().getTime();
+  //       // Filename: change as you want! 
+  //       // I will use the time for this example
+  //       // Why not use media.filename? Because the value is not certain exists
+  //       const filename = new Date().getTime();
 
-        const fullFilename = mediaPath + filename + '.' + extension;
+  //       const fullFilename = mediaPath + filename + '.' + extension;
 
-        // Save to file
-        try {
-          fs.writeFileSync(fullFilename, media.data, { encoding: 'base64' }); 
-          console.log('File downloaded successfully!', fullFilename);
-        } catch (err) {
-          console.log('Failed to save the file:', err);
-        }
-      }
-    });
-  }
+  //       // Save to file
+  //       try {
+  //         fs.writeFileSync(fullFilename, media.data, { encoding: 'base64' }); 
+  //         console.log('File downloaded successfully!', fullFilename);
+  //       } catch (err) {
+  //         console.log('Failed to save the file:', err);
+  //       }
+  //     }
+  //   });
+  // }
 });
 
 client.initialize();
